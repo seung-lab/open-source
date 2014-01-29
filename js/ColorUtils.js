@@ -75,7 +75,7 @@ var ColorUtils = {};
 		var delta = Math.round((args.percent / 100) * 255);
 		var value = hsv.v + delta;
 
-		hsv.v = Utils.cutoff(value, 0, 255);
+		hsv.v = cutoff(value, 0, 255);
 
 		return ColorUtils.HSVtoRGB(hsv.h, hsv.s, hsv.v);
 	};
@@ -94,7 +94,7 @@ var ColorUtils = {};
 	ColorUtils.lighten = function (args) {
 		var color = args.color;
 		var hsl = ColorUtils.RGBtoHSL(color.r, color.g, color.b);
-		hsl.l += Utils.cutoff(args.percent / 100, 0, 1);
+		hsl.l += cutoff(args.percent / 100, 0, 1);
 
 		return ColorUtils.HSLtoRGB(hsl.h, hsl.s, hsl.l);		
 	};
@@ -207,8 +207,8 @@ var ColorUtils = {};
 	ColorUtils.HSLtoRGB = function (h, s, l) {
 		h = h % 360;
 		h = h >= 0 ? h : h + 360;
-		s = Utils.cutoff(s, 0, 1);
-		l = Utils.cutoff(l, 0, 1);
+		s = cutoff(s, 0, 1);
+		l = cutoff(l, 0, 1);
 
 		var chroma = (1 - Math.abs(2 * l - 1)) * s;
 		var hprime = h / 60;
@@ -248,7 +248,7 @@ var ColorUtils = {};
 			if (!rgb.hasOwnProperty(component)) { return; }
 
 			rgb[component] = Math.round(255 * (rgb[component] + m));
-			rgb[component] = Utils.cutoff(rgb[component], 0, 255);
+			rgb[component] = cutoff(rgb[component], 0, 255);
 		}
 
 		return rgb;
@@ -406,5 +406,20 @@ var ColorUtils = {};
 			a: (matches[3] || 1)
 		};
 	};
+
+	/* cutoff
+	 *
+	 * Bound a value between a minimum and maximum value.
+	 *
+	 * Required: 
+	 *   [0] value: The number to evaluate
+	 *   [1] min: The minimum possible value
+	 *   [2] max: The maximum possible value
+	 * 
+	 * Returns: value if value in [min,max], min if less, max if more
+	 */
+	function cutoff(value, min, max) {
+		return Math.max(Math.min(value, max), min);
+	}
 
 })();
