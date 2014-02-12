@@ -15,7 +15,7 @@
 	 * both horizontally and vertically.
 	 *
 	 * Required:
-	 *	 [0] selector: The element to center within
+	 *   [0] selector: The element to center within
 	 *   [1] options or callback
 	 *   [2] callback (if [1] is options): Mostly useful for alwaysCenterIn
 	 *
@@ -30,10 +30,10 @@
 		var elements = this;
 		options = options || {};
 
-        if (typeof(options) === 'function') {
-            callback = options;
-            options = {};
-        }
+		if (typeof(options) === 'function') {
+			callback = options;
+			options = {};
+		}
 
 		var direction = options.direction || $.fn.centerIn.defaults.direction;
 		var extraleft = options.left || 0;
