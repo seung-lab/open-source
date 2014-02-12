@@ -151,6 +151,14 @@
         return parseFloat(value, 10);
     }
 
+    /* constructCenterFn
+     *
+     * Constructs an appropriate centering function
+     * that includes vertical, horizontal, and callback
+     * functions as applicable.
+     *
+     * Returns: fn
+     */
 	function constructCenterFn(horizontal, vertical, callback, direction) {
         var fns = []
 
