@@ -28,7 +28,7 @@
 	 *   [2] callback (if [1] is options): Mostly useful for alwaysCenterIn
 	 *
 	 * Options:
-	 *	 direction: 'horizontal', 'vertical', 'both' (default)
+	 *	 direction: 'horizontal', 'vertical', or 'both' (default)
 	 *	 top: Additional offset in px
 	 *	 left: Additional offset in px
 	 *
@@ -169,7 +169,60 @@
             fns.push(callback);
         }
 
-		return Utils.compose(fns);
+		return compose(fns);
+	}
+
+	/* compose
+	 *
+	 * Compose N functions into a single function call.
+	 *
+	 * Required: 
+	 *   [0-n] functions or arrays of functions
+	 * 
+	 * Returns: function
+	 */
+	function compose () {
+		var fns = flatten(arguments);
+
+		return function () {
+			for (var i = 0; i < fns.length; i++) {
+				fns[i].apply(this, arguments);
+			}
+		};
+	}
+
+	/* flatten
+	 *
+	 * Take an array that potentially contains other arrays 
+	 * and return them as a single array.
+	 *
+	 * e.g. flatten([1, 2, [3, [4]], 5]) => [1,2,3,4,5]
+	 *
+	 * Required: 
+	 *   [0] array
+	 * 
+	 * Returns: array
+	 */
+	function flatten (array) {
+		array = array || [];
+
+		var flat = [];
+
+		var len = array.length;
+		for (var i = 0; i < len; i++) {
+			var item = array[i];
+
+			console.log(item, typeof(item));
+
+			if (typeof(item) === 'object' && Array.isArray(item)) {
+				flat = flat.concat(flatten(item));
+			}
+			else {
+				flat.push(item);
+			}
+		} 
+
+		return flat;
 	}
 })(jQuery);
 
