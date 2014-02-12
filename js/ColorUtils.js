@@ -21,15 +21,22 @@ var ColorUtils = {};
 	 * Required: 
 	 *   [0] color1
 	 *   [1] color2
-	 *   
+	 *
+	 * Optional: 
+	 *   [2] blending: [0, 1] weighted average from color1 to color2   
+	 *       Defaults to 0.5
+	 *
 	 * Returns: color
 	 */
-	ColorUtils.average = function (color1, color2) {
+	ColorUtils.average = function (color1, color2, blending) {
+		blending = (blending === undefined) ? 0.5 : blending;
+		blending = cutoff(blending, 0, 1);
+
 		var color = {};
 		for (var key in color1) {
 			if (!color1.hasOwnProperty(key)) { continue; }
 
-			color[key] = (color1[key] + color2[key]) / 2;
+			color[key] = ((1 - blending) * color1[key]) + (blending * color2[key]);
 		}
 
 		return color;
@@ -277,11 +284,16 @@ var ColorUtils = {};
 			s = delta / max;
 
 			// Hexagonal mapping
-			if (r === max) {
+			if (delta === 0) {
+				h = 0; // h doesn't matter in this case (fully desaturated) so pick something arbitrary
+			}
+			else if (r === max) {
 				h = (g - b) / delta;
-			} else if (g === max) {
+			} 
+			else if (g === max) {
 				h = 2 + (b - r) / delta;
-			} else {
+			} 
+			else {
 				h = 4 + (r - g) / delta;
 			}
 
