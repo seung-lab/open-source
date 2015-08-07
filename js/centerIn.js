@@ -105,7 +105,7 @@
             evt += '.' + selector.attr('id');
         }
 
-        $(window).on(evt, function () {
+        $(window).off(evt).on(evt, function () {
 			selector.centerIn.apply(selector, args);
 		});
 
@@ -233,6 +233,91 @@
 		return flat;
 	}
 })(jQuery);
+
+// e.g. If using Zepto.js instead of jQuery proper.
+// Feel free to remove if necessary.
+
+(function ($) {
+	if (!$.fn.innerHeight) {
+		$.fn.innerHeight = function () {
+			var selector = $(this).first();
+
+			if (selector[0] == document) {
+				return "innerHeight" in window 
+               		? window.innerHeight
+               		: document.documentElement.offsetHeight; 
+			}
+
+			var style = window.getComputedStyle(selector[0]) || { 
+				"padding-top": 0, 
+				"padding-bottom": 0,
+			};
+
+			return selector.height() + parseInt(style["padding-top"], 10) + parseInt(style["padding-bottom"], 10);
+		};
+	}
+
+	if (!$.fn.innerWidth) {
+		$.fn.innerWidth = function () {
+			var selector = $(this).first();
+
+			if (selector[0] == document) {
+				return "innerHeight" in window 
+               		? window.innerWidth
+               		: document.documentElement.offsetWidth; 
+			}
+
+			var style = window.getComputedStyle(selector[0]) || { 
+				"padding-left": 0, 
+				"padding-right": 0,
+			};
+
+			return selector.width() + parseInt(style["padding-left"], 10) + parseInt(style["padding-right"], 10);
+		};
+	}
+
+	if (!$.fn.outerHeight) {
+		$.fn.outerHeight = function (include_margin) {
+			var selector = $(this).first();
+			var style = window.getComputedStyle(selector[0]) || { 
+				"border-top-width": 0, 
+				"border-bottom-width": 0,
+				"margin-top": 0,
+				"margin-bottom": 0,
+			};
+
+			var height = selector.innerHeight();
+			height += parseInt(style['border-top-width'], 10) + parseInt(style['border-bottom-width'], 10);
+
+			if (include_margin) {
+				height += parseInt(style['margin-top'], 10) + parseInt(style['margin-bottom'], 10);
+			}
+
+			return height;
+		};
+	}
+
+	if (!$.fn.outerWidth) {
+		$.fn.outerWidth = function (include_margin) {
+			var selector = $(this).first();
+			var style = window.getComputedStyle(selector[0]) || { 
+				"border-left-width": 0, 
+				"border-right-width": 0,
+				"margin-left": 0,
+				"margin-right": 0,
+			};
+
+			var width = selector.innerWidth();
+			width += parseInt(style['border-left-width'], 10) + parseInt(style['border-right-width'], 10);
+
+			if (include_margin) {
+				width += parseInt(style['margin-left'], 10) + parseInt(style['margin-right'], 10);
+			}
+
+			return width;
+		};
+	}
+})(jQuery || Zepto);
 
 /* The MIT License (MIT)
 
